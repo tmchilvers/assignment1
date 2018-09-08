@@ -19,16 +19,11 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
 
       else //Must check if second argument is a text file
       {
-        ifstream inputtedFile(argv[1]);  //set inputtedFile to the file from the second argument
+        ifstream dnaFile(argv[1]);  //set inputtedFile to the file from the second argument
 
-        if(!inputtedFile.is_open())
+        if(!dnaFile.is_open())
         {
           throw invalid_argument("Second argument must be of file type .txt, and/or exist in directory.\n"); //exception for incorrect file type
-        }
-
-        else
-        {
-          //continue program
         }
       }
     }
@@ -40,7 +35,36 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       exit(1);
     }
 
-    cout << "This should only appear when there is no error." << endl;
+    ifstream dnaFile; //set input file to dnaFile
+    dnaFile.open(argv[1]); //open file
+
+    string dna;
+
+    while(getline(dnaFile, dna)) //Read each line in file
+    {
+      for(int i = 0; i < dna.size(); i++) //Iterate through all the letters of each line
+      {
+        if(dna[dna.size()-1] == '\r') //Windows issue: Get line stops and discards \n, but not \r. Must change size everytime there is \r.
+        {
+          dna.resize(dna.size()-1);
+        }
+
+        //check if letters are correct letters found in DNA, accounting for capital and lowercase
+        if(dna[i] == 'A' || dna[i] == 'a' || dna[i] == 'C' || dna[i] == 'c' || dna[i] == 'G' || dna[i] == 'g' || dna[i] == 'T' || dna[i] == 't')
+        {
+          //class functions for individual string data will be used here
+        }
+
+        else
+        {
+          cout << "Error in DNA. Incorrect letter was detected in DNA string.\nProgram will end." << endl;
+          exit(1);
+        }
+      }
+      cout << dna << endl;
+    }
+
+
 
 
 
