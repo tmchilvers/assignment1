@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdexcept> //Allows access to c++ standard exception library
 #include <fstream>  //Allows access to input and write to files
+#include <math.h> //Used for square root
+#include <string> //Allows access to strings
 using namespace std;
 
 
@@ -8,26 +10,26 @@ using namespace std;
 class DnaStats
 {
   private:
-    std::string d; //all the dna strings
+    string d; //all the dna strings
     int l; //all dna lengths
 
   public:
     //constructors
     DnaStats(); //Default
     DnaStats(int l); //Length only
-    DnaStats(std::string d); //String only
-    DnaStats(std::string d, int l);
+    DnaStats(string d); //String only
+    DnaStats(string d, int l);
 
     //mutator methods
     double mean(int l, int num); //caclulates mean of all DNA lengths
     double variance(double sumString, int num); //calculates variance of DNA lengths
-    double standardDeviation(int l);
-    double probNucleotide(int l);
-    double probBigram(int l);
+    double standardDeviation(double var);
+    double probability(int n, int sumString);
+    double gaussian();
 
     //accessor methods
     int getLength();
-    std::string getDna();
+    string getDna();
 };
 
 
@@ -43,12 +45,12 @@ DnaStats::DnaStats(int len) //Constructor with only length provided
   l = len;
 }
 
-DnaStats::DnaStats(std::string s) //Constructor with only string provided
+DnaStats::DnaStats(string s) //Constructor with only string provided
 {
   d = s;
 }
 
-DnaStats::DnaStats(std::string s, int len) //Constructor for both length and string
+DnaStats::DnaStats(string s, int len) //Constructor for both length and string
 {
   d = s;
   l = len;
@@ -60,7 +62,7 @@ int DnaStats::getLength()
   return l;
 }
 
-std::string DnaStats::getDna()
+string DnaStats::getDna()
 {
   return d;
 }
@@ -76,8 +78,22 @@ double DnaStats::variance(double sumString, int num)
   return (sumString / num);
 }
 
+double DnaStats::standardDeviation(double var)
+{
+  return sqrt(var);
+}
 
-/*---------------------------------MAIN---------------------------------------*/
+double DnaStats::probability(int n, int sumString)
+{
+  return ((double)n / (double)sumString) * 100;
+}
+
+double DnaStats::gaussian()
+{
+
+}
+
+/*-------------------------------------MAIN-----------------------------------------*/
 int main(int argc, char* argv[]) //Will take in 2 arguments
 {
 
@@ -118,6 +134,12 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     int sum = 0; //initialize sum of all the lengths
     int numOfStrings = 0; //count the number of DNA strings there are
 
+    int countA = 0, countT = 0, countC = 0, countG = 0; //initialize all counting objects for each nucleotide to zero
+    int countAA = 0, countAC = 0, countAT = 0, countAG = 0;
+    int countTA = 0, countTC = 0, countTT = 0, countTG = 0;
+    int countCC = 0, countCA = 0, countCT = 0, countCG = 0;
+    int countGG = 0, countGA = 0, countGT = 0, countGC = 0;
+
     while(getline(dnaFile, dna)) //Read each line in file
     {
       for(int i = 0; i < dna.size(); i++) //Iterate through all the letters of each line
@@ -130,7 +152,28 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
         //check if letters are correct letters found in DNA, accounting for capital and lowercase
         if(dna[i] == 'A' || dna[i] == 'a' || dna[i] == 'C' || dna[i] == 'c' || dna[i] == 'G' || dna[i] == 'g' || dna[i] == 'T' || dna[i] == 't')
         {
-          //class functions for individual string data will be used here
+          dna[i] = tolower(dna[i]); //convert all to lowercase to read through more easily
+
+          //find probability of each nucleotide by summing each nucleotide
+          if(dna[i] == 'a')
+          {
+            countA += 1;
+          }
+
+          else if(dna[i] == 't')
+          {
+            countT += 1;
+          }
+
+          else if(dna[i] == 'c')
+          {
+            countC += 1;
+          }
+
+          else if(dna[i] == 'g')
+          {
+            countG += 1;
+          }
         }
 
         else
@@ -142,16 +185,114 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       sum += dna.size(); //add the size of each DNA string to the total sum
       numOfStrings += 1; //add how many DNA strings there are
       allDna += dna; //record all the DNA strings and store it in one single string object
+
+      for(int i = 0; i < dna.size(); i++)
+      {
+        //Check for bigrams
+        if(dna[i+1] == '\r')
+        {
+          //pass
+        }
+
+        else if(dna[i] == 'a' && dna[i+1] == 'a')
+        {
+          countAA += 1;
+        }
+
+        else if(dna[i] == 'a' && dna[i+1] == 'c')
+        {
+          countAC += 1;
+        }
+
+        else if(dna[i] == 'a' && dna[i+1] == 't')
+        {
+          countAT += 1;
+        }
+
+        else if(dna[i] == 'a' && dna[i+1] == 'g')
+        {
+          countAG += 1;
+        }
+
+        else if(dna[i] == 'c' && dna[i+1] == 'c')
+        {
+          countCC += 1;
+        }
+
+        else if(dna[i] == 'c' && dna[i+1] == 'a')
+        {
+          countCA += 1;
+        }
+
+        else if(dna[i] == 'c' && dna[i+1] == 't')
+        {
+          countCT += 1;
+        }
+
+        else if(dna[i] == 'c' && dna[i+1] == 'g')
+        {
+          countCG += 1;
+        }
+
+        else if(dna[i] == 'g' && dna[i+1] == 'g')
+        {
+          countGG += 1;
+        }
+
+        else if(dna[i] == 'g' && dna[i+1] == 'c')
+        {
+          countGC += 1;
+        }
+
+        else if(dna[i] == 'g' && dna[i+1] == 't')
+        {
+          countGT += 1;
+        }
+
+        else if(dna[i] == 'g' && dna[i+1] == 'a')
+        {
+          countGA += 1;
+        }
+
+        else if(dna[i] == 't' && dna[i+1] == 't')
+        {
+          countTT += 1;
+        }
+
+        else if(dna[i] == 't' && dna[i+1] == 'c')
+        {
+          countTC += 1;
+        }
+
+        else if(dna[i] == 't' && dna[i+1] == 'a')
+        {
+          countTA += 1;
+        }
+
+        else if(dna[i] == 't' && dna[i+1] == 'g')
+        {
+          countTG += 1;
+        }
+      }
     }
 
+    double probA, probT, probC, probG; //initialize probability objects
+
     DnaStats inputtedDna(allDna, sum); //DnaStats object created to calculate math and stats data
+
+    probA = inputtedDna.probability(countA, sum); //find probability of each nucleotide
+    probT = inputtedDna.probability(countT, sum);
+    probC = inputtedDna.probability(countC, sum);
+    probG = inputtedDna.probability(countG, sum);
+
+    cout << "Sum: " << sum << endl;
 
     double mean = 0;
     mean = inputtedDna.mean(sum, numOfStrings); //calculate mean of all dna lengths
     cout << "Mean: " << mean << endl;
 
 
-    dnaFile.close();
+    dnaFile.close(); //Must close and reopen file to use getline method again
     dnaFile.open(argv[1]); //open file
 
     dna = "";
@@ -176,6 +317,10 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     variance = inputtedDna.variance(sumForVariance, numOfStrings);
     cout << "Variance: " << variance << endl;
 
+    double stanDev = 0;
+    stanDev = inputtedDna.standardDeviation(variance);
+    cout << "Standard Deviation: " << stanDev << endl;
+
 
 
     cout << "Enter another file? (y|n): " << endl; //Allow user to enter another file again.
@@ -187,7 +332,19 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       cin >> argv[1];
     }
 
+    else if(answer == 'n' || answer == 'N')
+    {
+      break;
+    }
+
+    else
+    {
+      cout << "Not a valid answer. Program fail.\n";
+      exit(1);
+    }
+
   } while(answer == 'y' || answer == 'Y');
+
 
   cout << "\nProgram will now close.\n";
 
