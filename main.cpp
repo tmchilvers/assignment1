@@ -1,8 +1,10 @@
+#define _USE_MATH_DEFINES //allows access to PI constant
 #include <iostream>
 #include <stdexcept> //Allows access to c++ standard exception library
 #include <fstream>  //Allows access to input and write to files
 #include <math.h> //Used for square root
 #include <string> //Allows access to strings
+#include <ctime> //Take in time for seed for random numbers
 using namespace std;
 
 
@@ -25,7 +27,7 @@ class DnaStats
     double variance(double sumString, int num); //calculates variance of DNA lengths
     double standardDeviation(double var);
     double probability(int n, int sumString);
-    double gaussian();
+    double gaussian(double var, double stanD);
 
     //accessor methods
     int getLength();
@@ -88,9 +90,19 @@ double DnaStats::probability(int n, int sumString)
   return ((double)n / (double)sumString) * 100;
 }
 
-double DnaStats::gaussian()
+double DnaStats::gaussian(double var, double stanD)
 {
+  srand(time(NULL));
+  double randA = ((double)rand()/(double)RAND_MAX);
+  double randB = ((double)rand()/(double)RAND_MAX);
 
+  double c = sqrt((-2 * log(randA))) * cos(2 * M_PI * randB);
+  cout << "C: " << c << endl;
+
+  double d = stanD + (var * c);
+
+  cout << "D: " << d << endl;
+  return d;
 }
 
 /*-------------------------------------MAIN-----------------------------------------*/
@@ -276,7 +288,9 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       }
     }
 
-    double probA, probT, probC, probG; //initialize probability objects
+    double probA, probT, probC, probG; //initialize probability objects of nucleotides
+    double probAA, probAC, probAT, probAG, probCC, probCA, probCT, probCG, probGG, probGA, probGT, probGC, probTT, probTA, probTC, probTG;
+
 
     DnaStats inputtedDna(allDna, sum); //DnaStats object created to calculate math and stats data
 
@@ -284,6 +298,21 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     probT = inputtedDna.probability(countT, sum);
     probC = inputtedDna.probability(countC, sum);
     probG = inputtedDna.probability(countG, sum);
+    probAA = inputtedDna.probability(countAA, sum); //find probability of each brigram
+    probAC = inputtedDna.probability(countAC, sum);
+    probAT = inputtedDna.probability(countAT, sum);
+    probAG = inputtedDna.probability(countAG, sum);
+    probCC = inputtedDna.probability(countCC, sum);
+    probCA = inputtedDna.probability(countCA, sum);
+    probCT = inputtedDna.probability(countCG, sum);
+    probGG = inputtedDna.probability(countGG, sum);
+    probGA = inputtedDna.probability(countGA, sum);
+    probGT = inputtedDna.probability(countGC, sum);
+    probGC = inputtedDna.probability(countGC, sum);
+    probTT = inputtedDna.probability(countTT, sum);
+    probTA = inputtedDna.probability(countTA, sum);
+    probTC = inputtedDna.probability(countTC, sum);
+    probTG = inputtedDna.probability(countTG, sum);
 
     cout << "Sum: " << sum << endl;
 
@@ -320,6 +349,8 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     double stanDev = 0;
     stanDev = inputtedDna.standardDeviation(variance);
     cout << "Standard Deviation: " << stanDev << endl;
+
+    inputtedDna.gaussian(variance, stanDev);
 
 
 
