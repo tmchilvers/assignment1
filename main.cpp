@@ -90,22 +90,23 @@ double DnaStats::probability(int n, int sumString)
   return ((double)n / (double)sumString) * 100;
 }
 
-double DnaStats::gaussian(double var, double stanD)
+double DnaStats::gaussian(double m, double stanD)
 {
   srand(time(NULL));
   double randA = ((double)rand()/(double)RAND_MAX);
   double randB = ((double)rand()/(double)RAND_MAX);
 
+
   double c = sqrt((-2 * log(randA))) * cos(2 * M_PI * randB);
   cout << "C: " << c << endl;
 
-  double d = stanD + (var * c);
+  double d = m + (stanD * c);
 
   cout << "D: " << d << endl;
   return d;
 }
 
-/*-------------------------------------MAIN-----------------------------------------*/
+/*------------------------------------MAIN------------------------------------*/
 int main(int argc, char* argv[]) //Will take in 2 arguments
 {
 
@@ -350,7 +351,7 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     stanDev = inputtedDna.standardDeviation(variance);
     cout << "Standard Deviation: " << stanDev << endl;
 
-    inputtedDna.gaussian(variance, stanDev);
+    inputtedDna.gaussian(mean, stanDev);
 
 
 
