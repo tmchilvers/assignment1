@@ -93,7 +93,7 @@ double DnaStats::probability(int n, int sumString)
 double DnaStats::gaussian(double m, double stanD)
 {
   double d = 0;
-  while(d < 1)
+  while(d < 2)
   {
     d = 0;
     double randA = ((double)rand()/(double)RAND_MAX); //first random number
@@ -382,65 +382,43 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
 
     outputDnaFile << "\n\n1000 DNA strings created below: \n\n";
     srand(time(NULL)); //set seed for random to time for better random calculations
+
+
+    countA = 0; //initialize variables to count number of each nucleotide being added into the new DNA string
+    countT = 0;
+    countC = 0;
+    countG = 0;
+    double checkD = 0;
+    double checkProbA = 0; //initialize new probability of each nucleotide in string
+    double checkProbT = 0;
+    double checkProbC = 0;
+    double checkProbG = 0;
     for(int i = 0; i < 1000; i++) //make 1000 strings
     {
       int D = 0; //calculate length for new DNA string
       D = inputtedDna.gaussian(mean, stanDev); //calculate gaussian length
 
-      int countA = 0; //initialize variables to count number of each nucleotide being added into the new DNA string
-      int countT = 0;
-      int countC = 0;
-      int countG = 0;
-      double checkProbA = 0; //initialize new probability of each nucleotide in string
-      double checkProbT = 0;
-      double checkProbC = 0;
-      double checkProbG = 0;
-
-      for(int j = 0; j < D; j++) //make a string the length of calculated D
+      for(int j = 0; j < (D - 1); j++) //make a string the length of calculated D
       {
-        int randNum = ((rand() % 4) + 1); //find a random number between 1-4
-        if(randNum == 1)
+        int randNum = ((rand() % 100) + 1); //find a random number between 1-100
+        if(randNum < probA)
         {
-          countA += 1;
-          checkProbA = ((countA / (1000 * D)) * 100);
-          if(checkProbA < probA)
-          {
-            outputDnaFile << 'A';
-          }
+          outputDnaFile << 'A';
         }
 
-        else if(randNum == 2)
+        else if(randNum < (probT + probA))
         {
-          countT += 1;
-          checkProbT = ((countT / (1000 * D)) * 100);
-          if(checkProbT < probT)
-          {
-            outputDnaFile << 'T';
-          }
+          outputDnaFile << 'T';
         }
 
-        else if(randNum == 3)
+        else if(randNum < (probC + probT + probA))
         {
-          countC += 1;
-          checkProbC = ((countC / (1000 * D)) * 100);
-          if(checkProbC < probC)
-          {
-            outputDnaFile << 'C';
-          }
+          outputDnaFile << 'C';
         }
 
         else
         {
-          countG += 1;
-          checkProbG = ((countG / (1000 * D)) * 100);
-          if(checkProbG < probG)
-          {
-            outputDnaFile << 'G';
-          }
-          else if(checkProbA >= probA && checkProbT >= probT && checkProbC >= probC)
-          {
-            outputDnaFile << 'G';
-          }
+          outputDnaFile << 'G';
         }
       }
       outputDnaFile << '\n';
