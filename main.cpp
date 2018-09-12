@@ -92,21 +92,31 @@ double DnaStats::probability(int n, int sumString)
 
 double DnaStats::gaussian(double m, double stanD)
 {
-  srand(time(NULL)); //seed to time to better produce random numbers
-  double randA = ((double)rand()/(double)RAND_MAX); //first random number
-  double randB = ((double)rand()/(double)RAND_MAX); //secdon random number
+  double d = 0;
+  while(d < 1)
+  {
+    d = 0;
+    double randA = ((double)rand()/(double)RAND_MAX); //first random number
+    double randB = ((double)rand()/(double)RAND_MAX); //secdon random number
 
-  double c = sqrt((-2 * log(randA))) * cos(2 * M_PI * randB); //Gaussian equation
-  double d = m + (stanD * c); //find length D for new dna strings
-
+    double c = sqrt((-2 * log(randA))) * cos(2 * M_PI * randB); //Gaussian equation
+    d = m + (stanD * c); //find length D for new dna strings
+  }
   return d;
 }
 
 /*------------------------------------MAIN------------------------------------*/
 int main(int argc, char* argv[]) //Will take in 2 arguments
 {
+  srand(time(NULL)); //seed to time to better produce random numbers
 
   char answer; //This is the answer given by the user to either restart or end program. Must be defined outside of loop
+  ofstream outputDnaFile; //open new file called TristanChilvers.out
+  outputDnaFile.open("TristanChilvers.out", ios::in | ios::app);
+
+  outputDnaFile << "Tristan Chilvers\n";
+  outputDnaFile << "2288893\n";
+  outputDnaFile << "Section 02\n\n\n";
 
   do { //this do-while loop allows program to be repeated again.
 
@@ -312,14 +322,7 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     probTC = inputtedDna.probability(countTC, sum);
     probTG = inputtedDna.probability(countTG, sum);
 
-
-    ofstream outputDnaFile; //open new file called TristanChilvers.out
-    outputDnaFile.open("TristanChilvers.out");
-
-    outputDnaFile << "Tristan Chilvers\n";
-    outputDnaFile << "2288893\n";
-    outputDnaFile << "Section 02\n\n\n";
-    outputDnaFile << "Sum: " << sum << endl;
+    outputDnaFile << "Sum: " << sum << endl; //print sum stats to TristanChilvers.out file
 
     double mean = 0;
     mean = inputtedDna.mean(sum, numOfStrings); //calculate mean of all dna lengths
@@ -352,12 +355,10 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     double stanDev = 0; //calculate standard deviation
     stanDev = inputtedDna.standardDeviation(variance);
 
-    inputtedDna.gaussian(mean, stanDev); //calculate gaussian length
-
     //Output probability of bigrams to TristanChilvers.out file
     outputDnaFile << "Variance: " << variance << endl;
     outputDnaFile << "Standard Deviation: " << stanDev << "\n\n\n";
-    outputDnaFile << "Probability of each nucleotide listed below.\n\nProbability of A: " << probA << "%\n";
+    outputDnaFile << "Probability of each nucleotide listed below:\n\nProbability of A: " << probA << "%\n";
     outputDnaFile << "Probability of T: " << probT << "%\n";
     outputDnaFile << "Probability of C: " << probC << "%\n";
     outputDnaFile << "Probability of G: " << probG << "%\n\n\n";
@@ -379,6 +380,73 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     outputDnaFile << "Probability of GA: " << probGA << "%\n";
     outputDnaFile << "Probability of GT: " << probGT << "%\n";
 
+    outputDnaFile << "\n\n1000 DNA strings created below: \n\n";
+    srand(time(NULL)); //set seed for random to time for better random calculations
+    for(int i = 0; i < 1000; i++) //make 1000 strings
+    {
+      int D = 0; //calculate length for new DNA string
+      D = inputtedDna.gaussian(mean, stanDev); //calculate gaussian length
+
+      int countA = 0; //initialize variables to count number of each nucleotide being added into the new DNA string
+      int countT = 0;
+      int countC = 0;
+      int countG = 0;
+      double checkProbA = 0; //initialize new probability of each nucleotide in string
+      double checkProbT = 0;
+      double checkProbC = 0;
+      double checkProbG = 0;
+
+      for(int j = 0; j < D; j++) //make a string the length of calculated D
+      {
+        int randNum = ((rand() % 4) + 1); //find a random number between 1-4
+        if(randNum == 1)
+        {
+          countA += 1;
+          checkProbA = ((countA / (1000 * D)) * 100);
+          if(checkProbA < probA)
+          {
+            outputDnaFile << 'A';
+          }
+        }
+
+        else if(randNum == 2)
+        {
+          countT += 1;
+          checkProbT = ((countT / (1000 * D)) * 100);
+          if(checkProbT < probT)
+          {
+            outputDnaFile << 'T';
+          }
+        }
+
+        else if(randNum == 3)
+        {
+          countC += 1;
+          checkProbC = ((countC / (1000 * D)) * 100);
+          if(checkProbC < probC)
+          {
+            outputDnaFile << 'C';
+          }
+        }
+
+        else
+        {
+          countG += 1;
+          checkProbG = ((countG / (1000 * D)) * 100);
+          if(checkProbG < probG)
+          {
+            outputDnaFile << 'G';
+          }
+          else if(checkProbA >= probA && checkProbT >= probT && checkProbC >= probC)
+          {
+            outputDnaFile << 'G';
+          }
+        }
+      }
+      outputDnaFile << '\n';
+    }
+
+
     cout << "\nProgram has written data to TristanChilvers.out file. Please check your directory for this file.\n";
 
     cout << "Enter another file? (y|n): " << endl; //Allow user to enter another file again.
@@ -388,6 +456,7 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     {
       cout << "\nPlease enter file name (must be .txt): " << endl;
       cin >> argv[1];
+      outputDnaFile << "\n\n\n\n\n\n--------------------------------------------\nNEW DATA\n\n\n";
     }
 
     else if(answer == 'n' || answer == 'N')
