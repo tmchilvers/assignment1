@@ -92,17 +92,13 @@ double DnaStats::probability(int n, int sumString)
 
 double DnaStats::gaussian(double m, double stanD)
 {
-  srand(time(NULL));
-  double randA = ((double)rand()/(double)RAND_MAX);
-  double randB = ((double)rand()/(double)RAND_MAX);
+  srand(time(NULL)); //seed to time to better produce random numbers
+  double randA = ((double)rand()/(double)RAND_MAX); //first random number
+  double randB = ((double)rand()/(double)RAND_MAX); //secdon random number
 
+  double c = sqrt((-2 * log(randA))) * cos(2 * M_PI * randB); //Gaussian equation
+  double d = m + (stanD * c); //find length D for new dna strings
 
-  double c = sqrt((-2 * log(randA))) * cos(2 * M_PI * randB);
-  cout << "C: " << c << endl;
-
-  double d = m + (stanD * c);
-
-  cout << "D: " << d << endl;
   return d;
 }
 
@@ -305,22 +301,29 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     probAG = inputtedDna.probability(countAG, sum);
     probCC = inputtedDna.probability(countCC, sum);
     probCA = inputtedDna.probability(countCA, sum);
-    probCT = inputtedDna.probability(countCG, sum);
+    probCT = inputtedDna.probability(countCT, sum);
+    probCG = inputtedDna.probability(countCG, sum);
     probGG = inputtedDna.probability(countGG, sum);
     probGA = inputtedDna.probability(countGA, sum);
-    probGT = inputtedDna.probability(countGC, sum);
+    probGT = inputtedDna.probability(countGT, sum);
     probGC = inputtedDna.probability(countGC, sum);
     probTT = inputtedDna.probability(countTT, sum);
     probTA = inputtedDna.probability(countTA, sum);
     probTC = inputtedDna.probability(countTC, sum);
     probTG = inputtedDna.probability(countTG, sum);
 
-    cout << "Sum: " << sum << endl;
+
+    ofstream outputDnaFile; //open new file called TristanChilvers.out
+    outputDnaFile.open("TristanChilvers.out");
+
+    outputDnaFile << "Tristan Chilvers\n";
+    outputDnaFile << "2288893\n";
+    outputDnaFile << "Section 02\n\n\n";
+    outputDnaFile << "Sum: " << sum << endl;
 
     double mean = 0;
     mean = inputtedDna.mean(sum, numOfStrings); //calculate mean of all dna lengths
-    cout << "Mean: " << mean << endl;
-
+    outputDnaFile << "Mean: " << mean << endl;
 
     dnaFile.close(); //Must close and reopen file to use getline method again
     dnaFile.open(argv[1]); //open file
@@ -343,17 +346,40 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       sumForVariance += square; //add result to total sum
     }
 
-    double variance = 0;
+    double variance = 0; //calculate Variance
     variance = inputtedDna.variance(sumForVariance, numOfStrings);
-    cout << "Variance: " << variance << endl;
 
-    double stanDev = 0;
+    double stanDev = 0; //calculate standard deviation
     stanDev = inputtedDna.standardDeviation(variance);
-    cout << "Standard Deviation: " << stanDev << endl;
 
-    inputtedDna.gaussian(mean, stanDev);
+    inputtedDna.gaussian(mean, stanDev); //calculate gaussian length
 
+    //Output probability of bigrams to TristanChilvers.out file
+    outputDnaFile << "Variance: " << variance << endl;
+    outputDnaFile << "Standard Deviation: " << stanDev << "\n\n\n";
+    outputDnaFile << "Probability of each nucleotide listed below.\n\nProbability of A: " << probA << "%\n";
+    outputDnaFile << "Probability of T: " << probT << "%\n";
+    outputDnaFile << "Probability of C: " << probC << "%\n";
+    outputDnaFile << "Probability of G: " << probG << "%\n\n\n";
+    outputDnaFile << "Probability of each nucleotide bigram listed below:\n\n";
+    outputDnaFile << "Probability of AA: " << probAA << "%\n";
+    outputDnaFile << "Probability of AT: " << probAT << "%\n";
+    outputDnaFile << "Probability of AC: " << probAC << "%\n";
+    outputDnaFile << "Probability of AG: " << probAG << "%\n";
+    outputDnaFile << "Probability of TT: " << probTT << "%\n";
+    outputDnaFile << "Probability of TA: " << probTA << "%\n";
+    outputDnaFile << "Probability of TC: " << probTC << "%\n";
+    outputDnaFile << "Probability of TG: " << probTG << "%\n";
+    outputDnaFile << "Probability of CC: " << probCC << "%\n";
+    outputDnaFile << "Probability of CG: " << probCG << "%\n";
+    outputDnaFile << "Probability of CA: " << probCA << "%\n";
+    outputDnaFile << "Probability of CT: " << probCT << "%\n";
+    outputDnaFile << "Probability of GG: " << probGG << "%\n";
+    outputDnaFile << "Probability of GC: " << probGC << "%\n";
+    outputDnaFile << "Probability of GA: " << probGA << "%\n";
+    outputDnaFile << "Probability of GT: " << probGT << "%\n";
 
+    cout << "\nProgram has written data to TristanChilvers.out file. Please check your directory for this file.\n";
 
     cout << "Enter another file? (y|n): " << endl; //Allow user to enter another file again.
     cin >> answer;
