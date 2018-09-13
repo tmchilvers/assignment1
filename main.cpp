@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES //allows access to PI constant
+#define _USE_MATH_DEFINES //Allows access to PI constant
 #include <iostream>
 #include <stdexcept> //Allows access to c++ standard exception library
 #include <fstream>  //Allows access to input and write to files
@@ -9,29 +9,30 @@ using namespace std;
 
 
 /*----------------------------CLASS DNA_STATS---------------------------------*/
+//This class will perform required mathematical functions to find data for each DNA file
 class DnaStats
 {
   private:
-    string d; //all the dna strings
-    int l; //all dna lengths
+    string d; //all the DNA strings of file
+    int l; //all DNA lengths of file
 
   public:
     //constructors
     DnaStats(); //Default
     DnaStats(int l); //Length only
     DnaStats(string d); //String only
-    DnaStats(string d, int l);
+    DnaStats(string d, int l); //Both length and string given
 
     //mutator methods
     double mean(int l, int num); //caclulates mean of all DNA lengths
     double variance(double sumString, int num); //calculates variance of DNA lengths
-    double standardDeviation(double var);
-    double probability(int n, int sumString);
-    double gaussian(double var, double stanD);
+    double standardDeviation(double var); //calculates standardDeviation of DNA lengths
+    double probability(int n, int sumString); //calculates the probability of any number of nucleotide or bigram of entire DNA file
+    double gaussian(double var, double stanD); //calculates the length for every new string created
 
     //accessor methods
-    int getLength();
-    string getDna();
+    int getLength(); //length of all DNA strings
+    string getDna(); //All DNA strings
 };
 
 
@@ -93,7 +94,7 @@ double DnaStats::probability(int n, int sumString)
 double DnaStats::gaussian(double m, double stanD)
 {
   double d = 0;
-  while(d < 2)
+  while(d < 2) //if D is less than two, find D again to prevent issue with creating new DNA strings of no length
   {
     d = 0;
     double randA = ((double)rand()/(double)RAND_MAX); //first random number
@@ -112,13 +113,14 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
 
   char answer; //This is the answer given by the user to either restart or end program. Must be defined outside of loop
   ofstream outputDnaFile; //open new file called TristanChilvers.out
-  outputDnaFile.open("TristanChilvers.out", ios::in | ios::app);
+  outputDnaFile.open("TristanChilvers.out", ios::app);
 
   outputDnaFile << "Tristan Chilvers\n";
   outputDnaFile << "2288893\n";
   outputDnaFile << "Section 02\n\n\n";
 
   do { //this do-while loop allows program to be repeated again.
+
 
     try
     {
@@ -398,10 +400,10 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       int D = 0; //calculate length for new DNA string
       D = inputtedDna.gaussian(mean, stanDev); //calculate gaussian length
 
-      for(int j = 0; j < (D - 1); j++) //make a string the length of calculated D
+      for(int j = 0; j < D; j++) //make a string the length of calculated D
       {
         int randNum = ((rand() % 100) + 1); //find a random number between 1-100
-        if(randNum < probA)
+        if(randNum < probA) //if less than probability of A. Methods below follow similar structure
         {
           outputDnaFile << 'A';
         }
@@ -427,26 +429,29 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
 
     cout << "\nProgram has written data to TristanChilvers.out file. Please check your directory for this file.\n";
 
+    dnaFile.close(); //Close input file
+    outputDnaFile.close(); //close output file
+
     cout << "Enter another file? (y|n): " << endl; //Allow user to enter another file again.
     cin >> answer;
 
-    if(answer == 'y' || answer == 'Y')
+    if(answer == 'y' || answer == 'Y') //this allows user to return to beginning of while loop and process information of new file
     {
       cout << "\nPlease enter file name (must be .txt): " << endl;
-      cin >> argv[1];
+      cin >> argv[1]; //making this object equal to the file allows the program to check for error in file input again
+
+      outputDnaFile.open("TristanChilvers.out", ios::app); //append new stats to the same file
       outputDnaFile << "\n\n\n\n\n\n--------------------------------------------\nNEW DATA\n\n\n";
     }
 
-    else if(answer == 'n' || answer == 'N')
+    else if(answer == 'n' || answer == 'N') //if n the program will end
     {
-      dnaFile.close();
-      outputDnaFile.close();
       break;
     }
 
     else
     {
-      cout << "Not a valid answer. Program fail.\n";
+      cout << "Not a valid answer. Program fail.\n"; //if anything other than y or n is given
       exit(1);
     }
 
