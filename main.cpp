@@ -439,6 +439,8 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
 
     else if(answer == 'n' || answer == 'N')
     {
+      dnaFile.close();
+      outputDnaFile.close();
       break;
     }
 
@@ -449,6 +451,7 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     }
 
   } while(answer == 'y' || answer == 'Y');
+
 
 
   cout << "\nProgram will now close.\n";
