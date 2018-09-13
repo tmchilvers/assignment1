@@ -9,10 +9,24 @@ Almost all examples/topics covered in Chapters 1 and 2 of the C++ Data Structure
 
 Specific websites used are listed below:
 
+Main:
+https://stackoverflow.com/questions/3024197/what-does-int-argc-char-argv-mean
+
+
+Loops:
+https://www.tutorialspoint.com/cplusplus/cpp_do_while_loop.htm
+
+
+Exceptions:
+http://www.cplusplus.com/doc/tutorial/exceptions/
+https://www.tutorialspoint.com/cplusplus/cpp_exceptions_handling.htm
+https://stackoverflow.com/questions/8480640/how-to-throw-a-c-exception
+
 
 Classes:
 http://www.cplusplus.com/doc/tutorial/classes/
 https://www.geeksforgeeks.org/c-classes-and-objects/
+https://stackoverflow.com/questions/865922/how-to-write-a-simple-class-in-c
 
 
 GetLine:
@@ -23,6 +37,8 @@ File input/output:
 http://www.cplusplus.com/reference/fstream/ofstream/close/
 http://www.cplusplus.com/forum/beginner/4442/
 https://www.geeksforgeeks.org/cpp-program-to-append-content-of-one-text-file-to-another/
+http://umich.edu/~eecs381/handouts/filestreams.pdf
+http://www.cplusplus.com/reference/fstream/ifstream/is_open/
 
 
 Math c++ functions/constants:
