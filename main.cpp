@@ -23,6 +23,7 @@ class DnaStats
     DnaStats(string d); //String only
     DnaStats(string d, int l); //Both length and string given
 
+
     //mutator methods
     double mean(int l, int num); //caclulates mean of all DNA lengths
     double variance(double sumString, int num); //calculates variance of DNA lengths
@@ -58,6 +59,7 @@ DnaStats::DnaStats(string s, int len) //Constructor for both length and string
   d = s;
   l = len;
 }
+
 
 //Accessor Methods
 int DnaStats::getLength()
