@@ -61,5 +61,7 @@ http://www.cplusplus.com/doc/tutorial/basic_io/
 http://www.cplusplus.com/forum/beginner/25649/
 
 
+DIRECTIONS:
+Compile program through g++ and open program along with the name of the DNA text file. When prompted by the program to run another file through and if the answer is yes, please enter another text file.
 
 
