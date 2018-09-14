@@ -115,9 +115,9 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
 
   char answer; //This is the answer given by the user to either restart or end program. Must be defined outside of loop
   ofstream outputDnaFile; //open new file called TristanChilvers.out
-  outputDnaFile.open("TristanChilvers.out", ios::app);
+  outputDnaFile.open("TristanChilvers.out", ios::in | ios::app);
 
-  outputDnaFile << "Tristan Chilvers\n";
+  outputDnaFile << "\n\nTristan Chilvers\n";
   outputDnaFile << "2288893\n";
   outputDnaFile << "Section 02\n\n\n";
 
@@ -432,7 +432,7 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
     cout << "\nProgram has written data to TristanChilvers.out file. Please check your directory for this file.\n";
 
     dnaFile.close(); //Close input file
-    outputDnaFile.close(); //close output file
+
 
     cout << "Enter another file? (y|n): " << endl; //Allow user to enter another file again.
     cin >> answer;
@@ -442,17 +442,19 @@ int main(int argc, char* argv[]) //Will take in 2 arguments
       cout << "\nPlease enter file name (must be .txt): " << endl;
       cin >> argv[1]; //making this object equal to the file allows the program to check for error in file input again
 
-      outputDnaFile.open("TristanChilvers.out", ios::app); //append new stats to the same file
+
       outputDnaFile << "\n\n\n\n\n\n--------------------------------------------\nNEW DATA\n\n\n";
     }
 
     else if(answer == 'n' || answer == 'N') //if n the program will end
     {
+      outputDnaFile.close(); //close output file
       break;
     }
 
     else
     {
+      outputDnaFile.close(); //close output file
       cout << "Not a valid answer. Program fail.\n"; //if anything other than y or n is given
       exit(1);
     }
